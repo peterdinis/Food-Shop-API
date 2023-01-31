@@ -8,6 +8,7 @@ import productRoute from "./routes/productRoutes";
 dotenv.config();
 
 const app: Application = express();
+
 app.use(cors({ origin: process.env.FRONTEND_URL}));
 app.use(express.json());
 app.use(cookieParser());
