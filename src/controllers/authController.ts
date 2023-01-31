@@ -12,16 +12,6 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const {name, password, email} = req.body;
 
-    const userExists = await prisma.user.findUnique({
-        where: {
-            email
-        }
-    })
-
-    if(!userExists) {
-        throw new Error("User not found");
-    }
-
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = await prisma.user.create({
