@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import {Request, Response } from "express";
+import validate from "../validators/validateSchema";
+import productSchema from "../validators/productSchema";
 
 const prisma = new PrismaClient()
 
@@ -23,6 +25,7 @@ export const productDetails = async (req: Request, res: Response) => {
 }
 
 export const createProduct = async (req: Request, res: Response) => {
+    validate(productSchema);
     const newProduct = await prisma.product.create({
         data: {
             ...req.body
