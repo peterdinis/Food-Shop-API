@@ -51,6 +51,10 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const verifyPassword = await compare(password, user.password);
 
+    if(!verifyPassword) {
+        throw new Error("Invalid password or email");
+    }
+
     const refreshToken = sign({
         id: user.id,
         name: user.name
@@ -68,4 +72,52 @@ export const loginUser = async (req: Request, res: Response) => {
             expiredAt
         }
     })
+
+    const token = sign({ id: user.id, name: user.name }, process.env.JWT_SECRET as string, { expiresIn: process.env.EXPIRES_IN_JWT_SECRET });
+
+    return res.json({
+        token: token,
+        user: user
+    })
+}
+
+export const refreshTokenFn = async (req: Request, res: Response) => {
+    const refreshToken = req.cookies['refreshToken'];
+
+    const payload: any = verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
+
+    if(!payload) {
+        throw new Error("You are not authorized");
+    }
+
+    const dbToken = await prisma.token.findFirst({
+        where: {
+            userId: payload.id,
+        }
+    })
+
+    if(!dbToken) {
+        throw new Error("You are not authorized");
+    }
+
+    const token = sign({ id: payload.id, name: payload.name }, process.env.JWT_SECRET as string, { expiresIn: process.env.EXPIRES_IN_JWT_SECRET });
+
+    return res.status(200).send({ token });
+}
+
+export const logout = async (req: Request, res: Response) => {
+    const refreshToken = req.cookies['refreshToken'];
+    if(!refreshToken) {
+        throw new Error("You are not authorized");
+    }
+
+    await prisma.token.delete({
+        where: {
+            token: refreshToken
+        }
+    });
+
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'none', maxAge: 0, secure: true });
+
+    return res.sendStatus(204);
 }
