@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export const displayAllProducts = async (req: Request, res: Response) => {
     const allProducts = await prisma.product.findMany();
-    return allProducts;
+    return res.json(allProducts);
 }
 
 export const productDetails = async (req: Request, res: Response) => {
@@ -19,13 +19,15 @@ export const productDetails = async (req: Request, res: Response) => {
         throw new Error("Requested product not found");
     }
 
-    return oneProduct;
+    return res.json(oneProduct);
 }
 
 export const createProduct = async (req: Request, res: Response) => {
-    return await prisma.product.create({
+    const newProduct = await prisma.product.create({
         data: {
             ...req.body
         }
     })
+
+    return res.json(newProduct);
 }
