@@ -37,5 +37,5 @@ model Product {
   status      String
   image       String
   price       String
-  aviable     Boolean
+  avaiable     Boolean
 }

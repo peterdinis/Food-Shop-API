@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import exampleRoute from "./routes/exampleRoutes";
+import productRoute from "./routes/productRoutes";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(exampleRoute);
+app.use(productRoute);
 
 const PORT = process.env.PORT as unknown as number;
 
