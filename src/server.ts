@@ -7,7 +7,7 @@ import exampleRoute from "./routes/exampleRoutes";
 dotenv.config();
 
 const app: Application = express();
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
