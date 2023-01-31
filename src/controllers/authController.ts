@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
+import {Request, Response } from "express";
 import {registerSchema} from "../validators/userSchema"
 import bcrypt, { compare } from "bcrypt";
 import validate from "../validators/validateSchema";
@@ -122,6 +122,6 @@ export const logout = async (req: Request, res: Response) => {
     return res.sendStatus(204);
 }
 
-export const myProfile = async(req: { user: any; }, res: Response) => {
+export const myProfile = async(req: any, res: Response) => {
     return res.status(200).json({ user: req.user });
 }
