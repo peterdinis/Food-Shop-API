@@ -1,5 +1,5 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 
-export const exampleController = (_,res: Response) => {
-    res.send("Ping");
+export const exampleController = (req: Request, res: Response) => {
+    res.send("OK");
 }
