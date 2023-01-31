@@ -1,10 +1,18 @@
 import express, {Application} from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
+
+dotenv.config();
 
 const app: Application = express();
-app.use(cors())
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
-app.listen(7111, () => {
-    console.log("Applikácia beží na porte 7111");
+const PORT = process.env.PORT as unknown as number;
+
+app.listen(PORT, () => {
+    console.log(`Applikácia beží na porte ${PORT}`);
 })
