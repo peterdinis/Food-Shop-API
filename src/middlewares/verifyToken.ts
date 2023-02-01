@@ -1,12 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import {verify} from "jsonwebtoken";
-import dotenv from "dotenv";
 import { ForbiddenError, UnauthorizedError } from '../utils/helperErrors';
 
 const prisma = new PrismaClient();
-
-dotenv.config();
 
 export const verifyToken = async (req: any, _: Response, next: NextFunction) => {
     try {
@@ -15,7 +12,7 @@ export const verifyToken = async (req: any, _: Response, next: NextFunction) => 
         // Cut the received string and takes the token at position 1.
         const token = authorization && authorization.split(' ')[1] || '';
 
-        const payload: any = verify(token, process.env.JWT_SECRET as string);
+        const payload: any = verify(token, "SECRET");
 
         if (!payload)
             throw new UnauthorizedError();

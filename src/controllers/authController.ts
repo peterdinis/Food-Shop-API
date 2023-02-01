@@ -12,6 +12,10 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const {name, password, email} = req.body;
 
+    if(!name || !password || !email) {
+        throw new Error("All fields are required");
+    }
+
     const hashPassword = await bcrypt.hash(password, 10);
 
     const checkIfEmailExists = await prisma.user.findUnique({
@@ -58,7 +62,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const refreshToken = sign({
         id: user.id,
         name: user.name
-    }, process.env.JWT_REFRESH_TOKEN as string, {expiresIn: process.env.JWT_EXPIRATION_IN_SECONDS as string})
+    }, "SECRET", {expiresIn: "3600"})
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000, secure: true });
 
@@ -73,7 +77,7 @@ export const loginUser = async (req: Request, res: Response) => {
         }
     })
 
-    const token = sign({ id: user.id, name: user.name }, process.env.JWT_SECRET as string, { expiresIn: process.env.EXPIRES_IN_JWT_SECRET });
+    const token = sign({ id: user.id, name: user.name }, "SECRET", { expiresIn: "3600" });
 
     return res.json({
         token: token,
@@ -84,7 +88,7 @@ export const loginUser = async (req: Request, res: Response) => {
 export const refreshTokenFn = async (req: Request, res: Response) => {
     const refreshToken = req.cookies['refreshToken'];
 
-    const payload: any = verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
+    const payload: any = verify(refreshToken, "SECRET");
 
     if(!payload) {
         throw new Error("You are not authorized");
@@ -100,7 +104,7 @@ export const refreshTokenFn = async (req: Request, res: Response) => {
         throw new Error("You are not authorized");
     }
 
-    const token = sign({ id: payload.id, name: payload.name }, process.env.JWT_SECRET as string, { expiresIn: process.env.EXPIRES_IN_JWT_SECRET });
+    const token = sign({ id: payload.id, name: payload.name }, "SECRET", { expiresIn: "3600" });
 
     return res.status(200).send({ token });
 }
