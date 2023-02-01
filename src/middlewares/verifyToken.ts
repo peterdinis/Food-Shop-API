@@ -1,17 +1,17 @@
 import { NextFunction, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import {verify} from "jsonwebtoken";
-import { ForbiddenError, UnauthorizedError } from '../utils/helperErrors';
+import { UnauthorizedError } from '../utils/helperErrors';
+import { getErrorMessage } from '../utils/catchErrorMessage';
 
 const prisma = new PrismaClient();
 
 export const verifyToken = async (req: any, _: Response, next: NextFunction) => {
     try {
         const { authorization } = req.headers;
-
         // Cut the received string and takes the token at position 1.
-        const token = authorization && authorization.split(' ')[1] || '';
-
+        const token = authorization;
+        /* debugger; */
         const payload: any = verify(token, "SECRET");
 
         if (!payload)
@@ -30,7 +30,7 @@ export const verifyToken = async (req: any, _: Response, next: NextFunction) => 
         req.user = loggedUser;
 
         next();
-    } catch (error: any) {
-        throw new ForbiddenError();
+    } catch (error) {
+        getErrorMessage(error);
     }
 };
