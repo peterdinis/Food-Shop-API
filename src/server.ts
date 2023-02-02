@@ -8,7 +8,7 @@ import authRoute from "./routes/authRoutes"
 
 dotenv.config();
 
-const app: Application = express();
+export const app: Application = express();
 
 app.use(cors({ origin: process.env.FRONTEND_URL}));
 app.use(express.json());
