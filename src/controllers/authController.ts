@@ -7,6 +7,26 @@ import {sign, verify} from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
+export const allRegisterUsers = async (req: Request, res: Response) => {
+    const allUsers = await prisma.user.findMany();
+    return allUsers;
+}
+
+export const userInfo = async (req: Request, res: Response) => {
+    const {email} = req.params;
+    const oneUser = await prisma.user.findUnique({
+        where: {
+            email
+        }
+    })
+
+    if(!oneUser) {
+        throw new Error("User with this email not found");
+    }
+
+    return oneUser;
+}
+
 export const registerUser = async (req: Request, res: Response) => {
     validate(registerSchema)
 
