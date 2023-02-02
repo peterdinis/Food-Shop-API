@@ -14,6 +14,9 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
+  name: z.string({
+    required_error: "Name is required",
+  }),
   email: z.string({
     required_error: "Email is required",
   }),
