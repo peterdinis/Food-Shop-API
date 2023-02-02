@@ -17,6 +17,7 @@ model User {
   password  String
   createdAt DateTime @default(now())
   Token     Token[]
+  myCard    Card[]
 
   @@map("users")
 }
@@ -33,7 +34,7 @@ model Token {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
   status      String
@@ -41,13 +42,15 @@ model Product {
   price       String
   avaiable    Boolean
   card        Card[]
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model Card {
-  id          Int     @id @default(autoincrement())
-  productId   Int
-  product     Product     @relation(fields: [productId], references: [id])
-  quantity    Int
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  quantity  Int
   createdAt DateTime @default(now())
 }

@@ -1,9 +1,11 @@
 import express from "express";
 import { verifyToken } from "../middlewares/verifyToken";
-import { loginUser, logout, myProfile, refreshTokenFn, registerUser } from "../controllers/authController";
+import { allRegisterUsers, loginUser, logout, myProfile, refreshTokenFn, registerUser, userInfo } from "../controllers/authController";
 
 const router = express.Router();
 
+router.get("/users", allRegisterUsers);
+router.get("/user/:email", verifyToken, userInfo);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/profile", verifyToken, myProfile);
