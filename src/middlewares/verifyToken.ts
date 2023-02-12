@@ -11,7 +11,6 @@ export const verifyToken = async (req: any, _: Response, next: NextFunction) => 
         const { authorization } = req.headers;
         // Cut the received string and takes the token at position 1.
         const token = authorization;
-        /* debugger; */
         const payload: any = verify(token, "SECRET");
 
         if (!payload)
